@@ -4,7 +4,7 @@
 	let width = $state(1024);
 	let height = $state(768);
 
-	import { CalendarDate, createCalendar, toCalendar } from '@internationalized/date';
+	import { CalendarDate, createCalendar, DateFormatter, toCalendar } from '@internationalized/date';
 
 	import {
 		// queries / helpers
@@ -120,83 +120,96 @@
 
 	// weekday headers (Intl fallback)
 	const weekdayHeaders = (() => {
-		try {
-			const dtf = new Intl.DateTimeFormat(locale, { weekday: 'short' });
-			// pick 7 consecutive JS dates (arbitrary) and format them
-			const arr: string[] = [];
-			for (let i = 0; i < 7; i++) arr.push(dtf.format(new Date(2020, 0, 5 + i - 1)));
-			return arr;
-		} catch {
-			return ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
-		}
+		return ['شن', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'جم'];
 	})();
 </script>
 
-<Popover.Root>
-	<Popover.Trigger
-		class="rounded-input bg-dark
-	text-background shadow-mini hover:bg-dark/95 inline-flex h-10 items-center justify-center px-[21px] text-[15px] font-medium whitespace-nowrap transition-all select-none hover:cursor-pointer active:scale-[0.98]"
-	>
-		<input type="text" />
-	</Popover.Trigger>
-	<Popover.Portal>
-		<Popover.Content
-			trapFocus={false}
-			onOpenAutoFocus={(e) => {
-				// prevent auto focus
-				e.preventDefault();
-			}}
-			class="border-dark-10 bg-background shadow-popover data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-30 w-full max-w-[328px] origin-(--bits-popover-content-transform-origin) rounded-[12px] border p-4"
-			sideOffset={8}
+<div class="main">
+	<Popover.Root>
+		<Popover.Trigger
+			class="rounded-input bg-dark
+		text-background shadow-mini hover:bg-dark/95 inline-flex h-10 items-center justify-center  font-medium whitespace-nowrap transition-all select-none hover:cursor-pointer"
 		>
-			<div class="mx-auto max-w-md rounded-2xl bg-white p-4 shadow">
-				<div class="mb-3 flex items-center justify-between">
-					<button onclick={prevMonth} class="rounded px-3 py-1 hover:bg-gray-100">‹</button>
-					<div class="text-center">
-						<div class="text-lg font-semibold">{monthName(current)}</div>
+			<input
+				type="text"
+				class="rounded-sm border border-violet-800 p-1 text-center"
+				placeholder="date"
+				value={selected !== null ? `${selected?.year}/${selected?.month}/${selected?.day}` : ''}
+			/>
+		</Popover.Trigger>
+		<Popover.Portal>
+			<Popover.Content
+				trapFocus={false}
+				onOpenAutoFocus={(e) => {
+					// prevent auto focus
+					e.preventDefault();
+				}}
+				class=""
+				sideOffset={8}
+			>
+				<div class="mx-auto max-w-md rounded-2xl bg-white p-4 shadow">
+					<div class="mb-3 flex items-center justify-between">
+						<button
+							onclick={prevMonth}
+							class="rounded px-3 py-1 font-bold text-blue-500 hover:bg-gray-200">&lt;</button
+						>
+						<div class="text-center">
+							<div class="text-lg font-semibold">{monthName(current)}</div>
+						</div>
+						<button
+							onclick={nextMonth}
+							class="rounded px-3 py-1 font-bold text-blue-500 hover:bg-gray-200">&gt;</button
+						>
 					</div>
-					<button onclick={nextMonth} class="rounded px-3 py-1 hover:bg-gray-100">›</button>
-				</div>
 
-				<!-- weekdays -->
-				<div class="mb-1 grid grid-cols-7 text-center text-sm">
-					{#each weekdayHeaders as hd}
-						<div class="py-1">{hd}</div>
-					{/each}
-				</div>
-
-				<!-- days -->
-				<div class="grid grid-cols-7 gap-1 text-center">
-					{#each grid as week}
-						{#each week as day}
-							{#if day}
-								<button
-									onclick={() => chooseDay(day)}
-									class="rounded p-2 hover:bg-gray-100
-                   {day === selected ? 'bg-blue-500 text-white' : 'bg-white text-gray-800'}
-                   {day.year !== current.year || day.month !== current.month ? 'opacity-40' : ''}"
-								>
-									{day.day}
-								</button>
-							{:else}
-								<div class="p-2"></div>
-							{/if}
+					<!-- weekdays -->
+					<div class="rtlDirection mb-1 grid grid-cols-7 text-center text-sm text-blue-500">
+						{#each weekdayHeaders as hd}
+							{console.log(hd)}
+							<div class="py-1">{hd}</div>
 						{/each}
-					{/each}
-				</div>
-
-				{#if selected}
-					<div class="mt-3 text-sm text-gray-600">
-						انتخاب‌شده: {selected.year}/{selected.month}/{selected.day}
 					</div>
-				{/if}
-			</div>
-		</Popover.Content>
-	</Popover.Portal>
-</Popover.Root>
+
+					<!-- days -->
+					<div class="rtlDirection grid grid-cols-7 gap-1 text-center">
+						{#each grid as week}
+							{#each week as day}
+								{#if day}
+									{console.log(111, day, current)}
+									<button
+										onclick={() => chooseDay(day)}
+										class="rounded p-2 hover:bg-gray-300
+					{day === selected ? 'bg-blue-500! text-white hover:bg-blue-600!' : ' text-gray-800'}
+                   {day.year !== current.year || day.month !== current.month ? 'opacity-40' : ''}
+				   {isEqualDay(day, current) ? 'bg-gray-200' : ''}"
+									>
+										{day.day}
+									</button>
+								{:else}
+									<div class="p-2"></div>
+								{/if}
+							{/each}
+						{/each}
+					</div>
+
+					{#if selected}
+						<div class="mt-3 text-sm text-gray-600">
+							انتخاب‌شده: {selected.year}/{selected.month}/{selected.day}
+						</div>
+					{/if}
+				</div>
+			</Popover.Content>
+		</Popover.Portal>
+	</Popover.Root>
+</div>
 
 <style>
-	:global(body) {
+	.rtlDirection {
 		direction: rtl;
+	}
+
+	.main {
+		text-align: center;
+		padding: 20px;
 	}
 </style>
