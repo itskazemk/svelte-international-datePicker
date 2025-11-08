@@ -122,6 +122,19 @@
 	})();
 
 	let isOpen = $state(false);
+
+	// function handleInput(e) {
+	// 	let raw = (e.target as HTMLInputElement).value.replace(/\D/g, ''); // digits only
+
+	// 	if (raw.length > 8) raw = raw.slice(0, 8);
+
+	// 	// Format as ****/**/**
+	// 	let formatted = raw
+	// 		.replace(/^(\d{4})(\d)/, '$1/$2')
+	// 		.replace(/^(\d{4})\/(\d{2})(\d)/, '$1/$2/$3');
+
+	// 	console.log(333, formatted);
+	// }
 </script>
 
 <div class="main">
@@ -133,7 +146,7 @@
 			<input
 				type="text"
 				class="rounded-sm border border-violet-800 p-1 text-center"
-				placeholder="date"
+				placeholder="YYYY/MM/DD"
 				value={selected !== null ? `${selected?.year}/${selected?.month}/${selected?.day}` : ''}
 			/>
 		</Popover.Trigger>
