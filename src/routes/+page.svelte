@@ -1,8 +1,5 @@
 <script lang="ts">
-	import { Popover, Separator, Toggle } from 'bits-ui';
-
-	let width = $state(1024);
-	let height = $state(768);
+	import { Popover } from 'bits-ui';
 
 	import { CalendarDate, createCalendar, DateFormatter, toCalendar } from '@internationalized/date';
 
@@ -15,6 +12,7 @@
 		// equality helpers
 		isEqualDay
 	} from '@internationalized/date';
+	import { fly } from 'svelte/transition';
 
 	// ---------- state (Svelte 5 runes) ----------
 	// current Gregorian date -> convert to Persian calendar using createCalendar('persian')
@@ -122,10 +120,12 @@
 	const weekdayHeaders = (() => {
 		return ['شن', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'جم'];
 	})();
+
+	let isOpen = $state(false);
 </script>
 
 <div class="main">
-	<Popover.Root>
+	<Popover.Root bind:open={isOpen}>
 		<Popover.Trigger
 			class="rounded-input bg-dark
 		text-background shadow-mini hover:bg-dark/95 inline-flex h-10 items-center justify-center  font-medium whitespace-nowrap transition-all select-none hover:cursor-pointer"
@@ -139,7 +139,6 @@
 		</Popover.Trigger>
 		<Popover.Portal>
 			<Popover.Content
-				trapFocus={false}
 				onOpenAutoFocus={(e) => {
 					// prevent auto focus
 					e.preventDefault();
@@ -175,10 +174,12 @@
 						{#each grid as week}
 							{#each week as day}
 								{#if day}
-									{console.log(111, day, current)}
 									<button
-										onclick={() => chooseDay(day)}
-										class="rounded p-2 hover:bg-gray-300
+										onclick={() => {
+											chooseDay(day);
+											isOpen = false;
+										}}
+										class="rounded p-2 transition duration-200 ease-in hover:bg-gray-300
 					{day === selected ? 'bg-blue-500! text-white hover:bg-blue-600!' : ' text-gray-800'}
                    {day.year !== current.year || day.month !== current.month ? 'opacity-40' : ''}
 				   {isEqualDay(day, current) ? 'bg-gray-200' : ''}"
@@ -192,11 +193,16 @@
 						{/each}
 					</div>
 
-					{#if selected}
-						<div class="mt-3 text-sm text-gray-600">
-							انتخاب‌شده: {selected.year}/{selected.month}/{selected.day}
-						</div>
-					{/if}
+					<div class="mt-2 grid grid-cols-2 gap-2">
+						<button
+							class="cursor-pointer rounded-md bg-blue-500 py-1 duration-200 ease-in hover:bg-blue-600"
+							>انتخاب امروز</button
+						>
+						<button
+							class="cursor-pointer rounded-md bg-red-500 py-1 duration-200 ease-in hover:bg-red-600"
+							>پاک کردن</button
+						>
+					</div>
 				</div>
 			</Popover.Content>
 		</Popover.Portal>

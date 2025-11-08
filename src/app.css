@@ -1,1 +1,44 @@
 @import 'tailwindcss';
+
+/* --------------------FONTS---------------------- */
+@font-face {
+	font-family: 'B Nazanin';
+	src: url('src/lib/assets/fonts/BNazanin/IRNazanin.ttf') format('truetype');
+	font-style: normal;
+	font-weight: normal;
+}
+@font-face {
+	font-family: 'B Nazanin';
+	src: url('src/lib/assets/fonts/BNazanin/IRNazanin-Italic.ttf') format('truetype');
+	font-style: italic;
+	font-weight: normal;
+}
+@font-face {
+	font-family: 'B Nazanin';
+	src: url('src/lib/assets/fonts/BNazanin/IRNazanin-Bold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: 'B Titr';
+	src: url('src/lib/assets/fonts/BTitr/IRTitr.ttf') format('truetype');
+	font-style: normal;
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: Vazirmatn;
+	src:
+		url('src/lib/assets/fonts/Vazir/Vazirmatn[wght].woff2') format('woff2 supports variations'),
+		url('src/lib/assets/fonts/Vazir/Vazirmatn[wght].woff2') format('woff2-variations');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+* {
+	font-family: Vazirmatn;
+	font-feature-settings: 'ss01';
+}
+/* --------------------------------------------------------------------------------------- */
