@@ -12,7 +12,8 @@
 		// equality helpers
 		isEqualDay
 	} from '@internationalized/date';
-	import { fly } from 'svelte/transition';
+
+	let { date = $bindable() } = $props();
 
 	// ---------- state (Svelte 5 runes) ----------
 	// current Gregorian date -> convert to Persian calendar using createCalendar('persian')
@@ -112,8 +113,12 @@
 	}
 
 	function chooseDay(d: CalendarDate) {
-		console.log(d);
+		// console.log(d);
 		selected = d;
+
+		// !CalendarDate to js date class and string (they are in milady)
+		console.log(d.toDate('asia/tehran'), d.toString());
+		date = d;
 	}
 
 	// weekday headers (Intl fallback)
